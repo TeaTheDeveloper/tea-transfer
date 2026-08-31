@@ -9,7 +9,7 @@ if (!requestMethod('POST')) {
 }
 
 if (!Auth::verifyCsrf($_POST['csrf_token'] ?? null)) {
-    http_response_code(419);
+    // http_response_code(419);
     exit('Invalid security token. Refresh and try again.');
 }
 
@@ -17,7 +17,7 @@ $email = strtolower(trim((string) ($_POST['email'] ?? '')));
 $password = (string) ($_POST['password'] ?? '');
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $password === '') {
-    http_response_code(422);
+    // http_response_code(422);
     exit('Please enter a valid email and password');
 }
 
@@ -28,7 +28,7 @@ $stmt->execute([$email]);
 $user = $stmt->fetch();
 
 if (!$user || !password_verify($password, $user['password'])) {
-    http_response_code(401);
+    // http_response_code(401);
     exit('Incorrect email or password');
 }
 
