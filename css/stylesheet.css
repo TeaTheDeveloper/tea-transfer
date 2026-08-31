@@ -35,6 +35,7 @@
 /* =================================== */
 /*  Basic Style 
 /* =================================== */
+
 body, html {
   height: 100%;
 }
@@ -2809,4 +2810,24 @@ a.bg-primary:focus, a.bg-primary:hover, button.bg-primary:focus, button.bg-prima
 }
 .ui-menu .ui-menu-divider {
   display: none;
+}
+
+button,
+a,
+input,
+select,
+textarea,
+[role="button"],
+[role="link"],
+[tabindex]:not([tabindex="-1"]),
+.rounded,
+.container,
+.container-fluid,
+.row {
+  border-radius: 10px !important;
+}
+
+.[class*="col-"],
+.my-auto {
+  border-radius: 20px !important;
 }
