@@ -1,83 +1,10 @@
-http://data.fixer.io/api/latest?access_key=b25f410287682331aa60e205449c3073&symbols=USD,AUD,CAD,PLN,MXN&format=1
+# Exchange-rate API notes
 
-Bases:
-	["SGD","MYR","EUR","USD","AUD","JPY","CNH","HKD","CAD","INR","DKK","GBP","RUB","NZD","MXN","IDR","TWD","THB","VND"]
+Do not store API keys in this file or in JavaScript.
 
-bases = [{
-		"country": "",
-		"code": "SGD"
-	},
-	{
-		"country": "",
-		"code": "MYR"
-	},{
-		"country": "",
-		"code": "EUR"
-	},
-	{
-		"country": "",
-		"code": "USD"
-	},
-	{
-		"country": "",
-		"code": "AUD"
-	},
-	{
-		"country": "",
-		"code": "JPY"
-	},
-	{
-		"country": "",
-		"code": "CNH"
-	},
-	{
-		"country": "",
-		"code": "HKD"
-	},
-	{
-		"country": "",
-		"code": "CAD"
-	},
-	{
-		"country": "",
-		"code": "INR"
-	},
-	{
-		"country": "",
-		"code": "DKK"
-	},
-	{
-		"country": "",
-		"code": "GBP"
-	},
-	{
-		"country": "",
-		"code": "RUB"
-	},
-	{
-		"country": "",
-		"code": "NZD"
-	},
-	{
-		"country": "",
-		"code": "MXN"
-	},
-	{
-		"country": "",
-		"code": "IDR"
-	},
-	{
-		"country": "",
-		"code": "TWD"
-	},
-	{
-		"country": "",
-		"code": "THB"
-	},
-	{
-		"country": "",
-		"code": "VND"
-	},
+The application now exposes a small server-side endpoint at:
+  /exchange-rates?base=USD
 
-]
-
+If you use a paid exchange-rate provider, store its credential in the server
+environment (for example EXCHANGE_RATE_API_KEY) and call the provider from
+the server, never from browser JavaScript.

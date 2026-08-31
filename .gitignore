@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+vendor/
+node_modules/
+*.log
+.DS_Store
+.idea/
+.vscode/
+.env
+storage/installed.lock

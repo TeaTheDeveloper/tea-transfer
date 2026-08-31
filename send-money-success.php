@@ -1,4 +1,13 @@
-<?php if (isset($_GET['success'])) : ?>
+<?php
+require __DIR__ . '/app/bootstrap.php';
+Auth::requireLogin();
+
+$transfer = $_SESSION['last_transfer'] ?? null;
+if (!$transfer) {
+    redirect('dashboard');
+}
+unset($_SESSION['last_transfer']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -236,7 +245,7 @@
           <p class="text-center text-success text-8 line-height-07">Success!</p>
           <p class="text-center text-4">Transactions Complete</p>
           </div>
-          <p class="text-center text-3 mb-4">You've Succesfully sent <span class="text-4 font-weight-500"><?php echo $_GET['amount']; ?></span> to <span class="font-weight-500"><?php echo $_GET['recipient_email']; ?></span>, See transaction details under <a href="dashboard">Activity</a>.</p>
+          <p class="text-center text-3 mb-4">You've Succesfully sent <span class="text-4 font-weight-500">$<?= e(number_format((float) $transfer['amount_usd'], 2)) ?></span> to <span class="font-weight-500"><?= e($transfer['recipient_email']) ?></span>, See transaction details under <a href="dashboard">Activity</a>.</p>
             <button class="btn btn-primary btn-block" onclick="location.replace('send-money')">Send Money Again</button>
             <button class="btn btn-link btn-block" onclick="print()"><i class="fas fa-print"></i> Print</button> 
           </div>
@@ -302,5 +311,3 @@
 <script src="js/theme.js"></script>
 </body>
 </html>
-<?php else: header('location: send-money'); ?>
-<?php endif; ?>

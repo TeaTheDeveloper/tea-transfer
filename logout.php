@@ -1,5 +1,7 @@
 <?php
-	setcookie('auth', 0, time() - 86400 * 30, '/');
-	setcookie('mailer', 0, time() - 86400 * 30, '/');
-	header('location: login');
-?>
+declare(strict_types=1);
+
+require __DIR__ . '/app/bootstrap.php';
+
+Auth::logout();
+redirect('login');

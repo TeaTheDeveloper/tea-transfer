@@ -1,3 +1,6 @@
+<?php
+require __DIR__ . '/app/bootstrap.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +23,7 @@
 <link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
 <link rel="stylesheet" type="text/css" href="css/sweetalert.css" />
 </head>
-<body>
+<body data-csrf-token="<?= e(Auth::csrfToken()) ?>">
 <!-- Preloader -->
 <div id="preloader">
   <div data-loader="dual-ring"></div>
@@ -120,6 +123,7 @@
                 type: 'POST',
                 data: {
                     'auth' : true,
+                    'csrf_token' : $('body').data('csrf-token'),
                     'username' : username,
                     'email' : email,
                     'password' : password

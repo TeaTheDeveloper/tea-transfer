@@ -1,0 +1,8 @@
+{
+  "name": "teathedeveloper/tea-transfer",
+  "description": "Tea Transfer demo fintech application",
+  "type": "project",
+  "require": {
+    "php": "^8.1"
+  }
+}

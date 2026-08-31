@@ -1,3 +1,4 @@
+<?php require __DIR__ . '/app/bootstrap.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,7 @@
 <link href="images/favicon.png" rel="icon" />
 <title>Tea Transfer - Money Transfer and Online Payments</title>
 <meta name="description" content="This professional platform is for a Money Transfer and online payments purpose.">
-<meta name="author" content="harnishdesign.net">
+<meta name="author" content="TeaTheDeveloper">
 
 <!-- Web Fonts
 ============================================= -->
@@ -197,7 +198,7 @@
           ============================== -->
           <nav class="login-signup navbar navbar-expand">
             <ul class="navbar-nav">
-              <?php if (isset($_COOKIE['auth'])): ?>
+              <?php if (Auth::check()): ?>
                   <li><a href="dashboard">Dashboard</a> </li>
               <?php else: ?>
                   <li><a href="login">Login</a> </li>
@@ -244,7 +245,7 @@
                     <label for="youSend">You Send</label>
                     <div class="input-group">
                       <div class="input-group-prepend"> <span class="input-group-text">$</span> </div>
-                      <input type="number" step="0.01" class="form-control" data-bv-field="youSend" id="youSend" placeholder="0">
+                      <input type="number" step="0.01" class="form-control" data-bv-field="youSend" id="youSend" placeholder="0.00">
                       <div class="input-group-append"> <span class="input-group-text p-0">
                         <select id="youSendCurrency" data-style="custom-select bg-transparent border-0" data-container="body" data-live-search="true" class="selectpicker form-control bg-transparent" required="">
                           <optgroup label="Popular Currency">
@@ -311,7 +312,7 @@
                     <label for="recipientGets">Recipient Gets</label>
                     <div class="input-group">
                       <div class="input-group-prepend"> <span class="input-group-text">$</span> </div>
-                      <input type="number" step="0.01" class="form-control" data-bv-field="recipientGets" id="recipientGets" placeholder="0">
+                      <input type="number" step="0.01" class="form-control" data-bv-field="recipientGets" id="recipientGets" placeholder="0.00">
                       <div class="input-group-append"> <span class="input-group-text p-0">
                         <select id="recipientCurrency" data-style="custom-select bg-transparent border-0" data-container="body" data-live-search="true" class="selectpicker form-control bg-transparent" required="">
                           <optgroup label="Popular Currency">
@@ -901,7 +902,7 @@
                     <label for="wantTorequest">I want to request</label>
                     <div class="input-group">
                       <div class="input-group-prepend"> <span class="input-group-text">$</span> </div>
-                      <input type="number" step="0.01" class="form-control" data-bv-field="wantTorequest" id="wantTorequest" placeholder="0">
+                      <input type="number" step="0.01" class="form-control" data-bv-field="wantTorequest" id="wantTorequest" placeholder="0.00">
                       <div class="input-group-append"> <span class="input-group-text p-0">
                         <select id="wantToCurrency" data-style="custom-select bg-transparent border-0" data-container="body" data-live-search="true" class="selectpicker form-control bg-transparent" required="">
                           <optgroup label="Popular Currency">
@@ -1236,7 +1237,7 @@
             var settings = {
               "async": true,
               "crossDomain": true,
-              "url": "https://v6.exchangerate-api.com/v6/bfae432d487360a5d7b11376/latest/"+base,
+              "url": "exchange-rates?base="+base,
               "method": "GET"
             };
             $.ajax(settings).done(function (response) {
@@ -1252,7 +1253,7 @@
             setTimeout(function(){var amount = $('#youSend').val();
               var rate = parseFloat($('#rate').html());
               var power = Math.pow(10, 2);
-              $('#recipientGets').val(Math.round((amount*rate) * power)/power)}, 1000);
+              $('#recipientGets').val(parseFloat(Math.round((amount*rate) * power)/power).toFixed(2))}, 1000);
             $('.optgroup-1').off();
           }, 1000);
         });
@@ -1263,7 +1264,7 @@
               var settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": "https://v6.exchangerate-api.com/v6/bfae432d487360a5d7b11376/latest/"+base,
+                "url": "exchange-rates?base="+base,
                 "method": "GET"
               };
               $.ajax(settings).done(function (response) {
@@ -1273,13 +1274,15 @@
                 // console.log(conversion_rate);
                 // console.log(conversion_rate[exchange]);
 
+                conversion = conversion_rate[exchange];
+
                 var power = Math.pow(10, 2);
-                $('#current').html('The current exchange rate is <span class="font-weight-500">1 '+base+' = <span id="rate">'+conversion_rate[exchange]+'</span> '+exchange+'</span>');
+                $('#current').html('The current exchange rate is <span class="font-weight-500">1 '+base+' = <span id="rate">'+parseFloat(conversion).toFixed(2)+'</span> '+exchange+'</span>');
               });
               setTimeout(function(){var amount = $('#youSend').val();
               var rate = parseFloat($('#rate').html());
               var power = Math.pow(10, 2);
-              $('#recipientGets').val(Math.round((amount*rate) * power)/power)}, 1000);
+              $('#recipientGets').val(parseFloat(conversion*amount).toFixed(2))}, 1000);
               $('.optgroup-2').off();
             }, 1000);
           });
@@ -1293,7 +1296,7 @@
             var settings = {
               "async": true,
               "crossDomain": true,
-              "url": "https://v6.exchangerate-api.com/v6/bfae432d487360a5d7b11376/latest/"+base,
+              "url": "exchange-rates?base="+base,
               "method": "GET"
             };
             $.ajax(settings).done(function (response) {
@@ -1303,13 +1306,15 @@
               // console.log(conversion_rate);
               // console.log(conversion_rate[exchange]);
 
+              conversion = conversion_rate[exchange];
+
               var power = Math.pow(10, 2);
-              $('#current').html('The current exchange rate is <span class="font-weight-500">1 '+base+' = <span id="rate">'+conversion_rate[exchange]+'</span> '+exchange+'</span>');
+              $('#current').html('The current exchange rate is <span class="font-weight-500">1 '+base+' = <span id="rate">'+parseFloat(conversion).toFixed(2)+'</span> '+exchange+'</span>');
             });
             setTimeout(function(){var amount = $('#recipientGets').val();
             var rate = parseFloat($('#rate').html());
             var power = Math.pow(10, 2);
-            $('#youSend').val(Math.round((amount/rate) * power)/power)}, 1000);
+            $('#youSend').val(parseFloat(conversion*amount).toFixed(2))}, 1000);
             $('.optgroup-1').off();
           }, 1000);
         });
@@ -1320,7 +1325,7 @@
             var settings = {
               "async": true,
               "crossDomain": true,
-              "url": "https://v6.exchangerate-api.com/v6/bfae432d487360a5d7b11376/latest/"+base,
+              "url": "exchange-rates?base="+base,
               "method": "GET"
             };
             $.ajax(settings).done(function (response) {
@@ -1330,13 +1335,15 @@
               // console.log(conversion_rate);
               // console.log(conversion_rate[exchange]);
 
+              conversion = conversion_rate[exchange];
+              
               var power = Math.pow(10, 2);
-              $('#current').html('The current exchange rate is <span class="font-weight-500">1 '+base+' = <span id="rate">'+conversion_rate[exchange]+'</span> '+exchange+'</span>');
+              $('#current').html('The current exchange rate is <span class="font-weight-500">1 '+base+' = <span id="rate">'+parseFloat(conversion).toFixed(2)+'</span> '+exchange+'</span>');
             });
             setTimeout(function(){var amount = $('#recipientGets').val();
             var rate = parseFloat($('#rate').html());
             var power = Math.pow(10, 2);
-            $('#youSend').val(Math.round((amount/rate) * power)/power)}, 1000);
+            $('#youSend').val(parseFloat(conversion*amount).toFixed(2))}, 1000);
             $('.optgroup-2').off();
           }, 1000);
         });
@@ -1352,7 +1359,7 @@
 
     // var power = Math.pow(10, 2);
     // value = Math.round(value * power) / power;
-    $('#recipientGets').val(value);
+    $('#recipientGets').val(parseFloat(value).toFixed(2));
   });
   $('#recipientGets').on('input', function(){
     var amount = parseFloat($('#recipientGets').val());
@@ -1362,7 +1369,7 @@
 
     // var power = Math.pow(10, 2);
     // value = Math.round(value * power) / power;
-    $('#youSend').val(value);
+    $('#youSend').val(parseFloat(value).toFixed(2));
   });
 </script>
 <script type="text/javascript">
@@ -1371,7 +1378,7 @@
   var settings = {
     "async": true,
     "crossDomain": true,
-    "url": "https://v6.exchangerate-api.com/v6/bfae432d487360a5d7b11376/latest/"+base,
+    "url": "exchange-rates?base="+base,
     "method": "GET"
   };
   $.ajax(settings).done(function (response) {
@@ -1382,7 +1389,7 @@
     // console.log(conversion_rate[exchange]);
 
     var power = Math.pow(10, 2);
-    $('#current').html('The current exchange rate is <span class="font-weight-500">1 '+base+' = <span id="rate">'+conversion_rate[exchange]+'</span> '+exchange+'</span>');
+    $('#current').html('The current exchange rate is <span class="font-weight-500">1 '+base+' = <span id="rate">'+parseFloat(conversion_rate[exchange]).toFixed(2)+'</span> '+exchange+'</span>');
   });
 </script>
 </body>

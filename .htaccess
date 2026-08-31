@@ -1,18 +1,28 @@
-RewriteEngine on 
-RewriteCond %{REQUEST_FILENAME} !-d 
-RewriteCond %{REQUEST_FILENAME}\.php -f 
-RewriteRule ^(.*)$ $1.php
-RewriteEngine on 
-RewriteCond %{REQUEST_FILENAME} !-d 
-RewriteCond %{REQUEST_FILENAME}\.html -f 
-RewriteRule ^(.*)$ $1.html
+Options -Indexes
+RewriteEngine On
+
+# Hide implementation/configuration directories from direct web access.
+RewriteRule ^(?:app|config|database|storage|tests)(?:/|$) - [F,L,NC]
+<FilesMatch "^\.(?!well-known)">
+    Require all denied
+</FilesMatch>
+<FilesMatch "^(?:composer\.(?:json|lock)|README\.md|api\.txt)$">
+    Require all denied
+</FilesMatch>
+
+# Clean URLs for PHP pages.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+?)/?$ $1.php [L]
+
+# Basic browser hardening.
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
 ErrorDocument 400 /index
-
 ErrorDocument 401 /index
-
 ErrorDocument 403 /index
-
 ErrorDocument 404 /index
-
 ErrorDocument 500 /index

@@ -1,6 +1,9 @@
-<?php if (isset($_COOKIE['auth'])):?>
-<?php require 'class/User.php'; ?>
-<?php require 'function/Transactions.php'; ?>
+<?php
+require __DIR__ . '/app/bootstrap.php';
+Auth::requireLogin();
+require __DIR__ . '/class/User.php';
+require __DIR__ . '/function/Transactions.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -483,5 +486,3 @@
 <script src="js/theme.js"></script>
 </body>
 </html>
-<?php else: header('location: login'); ?>
-<?php endif; ?>

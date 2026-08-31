@@ -1,52 +1,48 @@
 <?php
-	/**
-	 * Grab all data from user provided credentials are met
-	 */
-	class GlobalUser
-	{
-		
-		public function Data()
-		{
-			require 'db.php';
-			if (isset($_COOKIE['auth'])) {
-				$user_id = $_COOKIE['auth'];
-				$stmt = "SELECT * FROM users WHERE user_id = ?";
-				$prep = $conn->prepare($stmt);
-				$prep->execute([$user_id]);
-				$result = $prep->fetch();
-				if (!empty($result)) {
-					return $data = $result;
-					$conn = null;
-				}
-				else{
-					//echo "Please login";
-					header('location: login');
-				}
-			}
-			else{
-				header('location: login');
-			}
-		}
-	}
-	//$data = Global(new User)->Data();
-	$data = (new GlobalUser)->Data();
-	/**
-	 * 
-	 */
-	class User extends GlobalUser
-	{
-		public function username($data)
-		{
-			echo $data['username'];
-		}
-		public function email($data)
-		{
-			echo $data['email'];
-		}
-		public function balance($data)
-		{
-			echo $data['balance'];
-		}
-	}
-	$user = new User();
-?>
+declare(strict_types=1);
+
+require_once __DIR__ . '/../app/bootstrap.php';
+
+Auth::requireLogin();
+
+class GlobalUser
+{
+    public function data(): array
+    {
+        $stmt = db()->prepare(
+            'SELECT user_id, username, email, balance, created_at
+             FROM users WHERE user_id = ? LIMIT 1'
+        );
+        $stmt->execute([Auth::userId()]);
+        $user = $stmt->fetch();
+
+        if (!$user) {
+            Auth::logout();
+            redirect('login');
+        }
+
+        return $user;
+    }
+
+}
+
+final class User extends GlobalUser
+{
+    public function username(array $data): void
+    {
+        echo e($data['username'] ?? '');
+    }
+
+    public function email(array $data): void
+    {
+        echo e($data['email'] ?? '');
+    }
+
+    public function balance(array $data): void
+    {
+        echo e(number_format((float) ($data['balance'] ?? 0), 2));
+    }
+}
+
+$data = (new GlobalUser())->data();
+$user = new User();

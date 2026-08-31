@@ -1,24 +1,18 @@
 <?php
-	function checkExistsUsername($arg)
-	{
-		require 'db.php';
-		$stmt = "SELECT * FROM users WHERE username = ?";
-		$prep = $conn->prepare($stmt);
-		$prep->execute([$arg]);
-		$result = $prep->fetch();
-		if (!empty($result)) {
-			return true;
-		}
-	}
-	function checkExistsEmail($arg)
-	{
-		require 'db.php';
-		$stmt = "SELECT * FROM users WHERE email = ?";
-		$prep = $conn->prepare($stmt);
-		$prep->execute([$arg]);
-		$result = $prep->fetch();
-		if (!empty($result)) {
-			return true;
-		}
-	}
-?>
+declare(strict_types=1);
+
+require_once __DIR__ . '/../app/bootstrap.php';
+
+function checkExistsUsername(string $username): bool
+{
+    $stmt = db()->prepare('SELECT 1 FROM users WHERE username = ? LIMIT 1');
+    $stmt->execute([strtolower(trim($username))]);
+    return (bool) $stmt->fetchColumn();
+}
+
+function checkExistsEmail(string $email): bool
+{
+    $stmt = db()->prepare('SELECT 1 FROM users WHERE email = ? LIMIT 1');
+    $stmt->execute([strtolower(trim($email))]);
+    return (bool) $stmt->fetchColumn();
+}
