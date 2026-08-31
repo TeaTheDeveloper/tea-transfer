@@ -42,11 +42,11 @@ if ($stmt->fetchColumn()) {
     $stmt->execute([$username]);
 
     if ($stmt->fetchColumn()) {
-        http_response_code(409);
+        // http_response_code(409);
         exit('Username already exists. Try another.');
     }
 
-    http_response_code(409);
+    // http_response_code(409);
     exit('Email already exists. Mind logging in?');
 }
 
